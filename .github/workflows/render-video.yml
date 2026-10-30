@@ -1,0 +1,73 @@
+name: Render Remotion video
+
+on:
+  workflow_dispatch:
+    inputs:
+      template:
+        description: Template to render
+        required: true
+        type: choice
+        options:
+          - lifespan-globe
+          - minus-times-plus
+          - negative-times-positive
+          - promo
+          - salam
+
+permissions:
+  contents: read
+
+jobs:
+  render:
+    name: Render ${{ inputs.template }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out project
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Ensure Remotion browser
+        run: npx remotion browser ensure
+
+      - name: Generate template audio when configured
+        shell: bash
+        env:
+          TEMPLATE_ID: ${{ inputs.template }}
+        run: |
+          GENERATE_AUDIO=$(node --input-type=module -e '
+            import { readFileSync } from "node:fs";
+            const data = JSON.parse(readFileSync(`src/templates/${process.env.TEMPLATE_ID}/data.json`, "utf8"));
+            if (Array.isArray(data.cues) && data.audio) {
+              console.log("generate");
+            } else {
+              console.log("skip");
+            }
+          ')
+          if [ "$GENERATE_AUDIO" = "generate" ]; then
+            npm run audio:sfx -- "$TEMPLATE_ID"
+          else
+            echo "No generated SFX configured; using the template's existing audio or silence."
+          fi
+
+      - name: Render MP4
+        env:
+          TEMPLATE_ID: ${{ inputs.template }}
+        run: |
+          mkdir -p out
+          npm run render -- "$TEMPLATE_ID" "out/${TEMPLATE_ID}.mp4"
+
+      - name: Upload rendered video
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ inputs.template }}-video
+          path: out/${{ inputs.template }}.mp4
+          if-no-files-found: error
+          retention-days: 14
