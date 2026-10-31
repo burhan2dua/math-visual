@@ -62,14 +62,14 @@ npm run build
 ```
 
 Render otomatis di GitHub tersedia melalui **Actions → Render Remotion video →
-Run workflow**. Masukkan nama folder template persis, misalnya
-`lifespan-globe`; workflow mencari folder yang berisi `data.json` dan
-`template.tsx`, serta memvalidasi JSON. Jika hanya satu template valid yang
-tersisa, kolom boleh dikosongkan dan workflow memilih template itu otomatis.
-Jika ada beberapa template, masukkan ID folder yang ingin dirender. GitHub
-Actions belum mendukung dropdown yang opsinya dibaca dinamis dari folder
-repository, jadi folder yang dihapus tidak meninggalkan pilihan workflow usang.
-Video MP4 tersedia sebagai artifact setelah render.
+Run workflow**. Kolom template menerima ID folder persis, dipisahkan koma.
+Kosongkan kolom untuk merender semua folder valid; isi satu ID untuk merender
+satu template, atau beberapa ID seperti `rotasi,why-3-14` untuk merender
+template yang dipilih berurutan. Workflow memvalidasi folder yang berisi
+`data.json` dan `template.tsx` beserta JSON-nya. Jika render satu template
+gagal, workflow tetap mencoba template berikutnya dan artifact hanya berisi
+video yang berhasil. Workflow tetap ditandai gagal jika ada template yang
+gagal dirender. Video MP4 tersedia sebagai artifact setelah render.
 
 Perintah Studio, render, type-check, dan build membuat ulang registry otomatis.
 Untuk membuat audio polifonik/SFX, isi properti audio di `data.json`, lalu jalankan:

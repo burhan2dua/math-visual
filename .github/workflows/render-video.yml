@@ -4,7 +4,7 @@ on:
   workflow_dispatch:
     inputs:
       template:
-        description: Optional when only one valid template folder remains
+        description: Comma-separated template IDs; leave empty to render all valid templates
         required: false
         type: string
 
@@ -19,10 +19,10 @@ jobs:
       - name: Check out project
         uses: actions/checkout@v4
 
-      - name: Validate template folder
-        id: template
+      - name: Select and validate template folders
+        id: templates
         env:
-          REQUESTED_TEMPLATE: ${{ inputs.template }}
+          REQUESTED_TEMPLATES: ${{ inputs.template }}
         run: |
           node --input-type=module <<'NODE'
           import {
@@ -43,37 +43,41 @@ jobs:
             )
             .map((entry) => entry.name)
             .sort();
-          const requested = process.env.REQUESTED_TEMPLATE?.trim();
-          const selected =
-            requested ||
-            (available.length === 1 ? available[0] : "");
+          const requested = process.env.REQUESTED_TEMPLATES?.trim();
+          const selected = requested
+            ? [...new Set(requested.split(",").map((id) => id.trim()).filter(Boolean))]
+            : available;
 
-          if (!available.includes(selected)) {
-            console.error(
-              requested
-                ? `Unknown template: ${requested}`
-                : "Enter a template ID because zero or multiple valid templates remain.",
-            );
+          if (selected.length === 0) {
+            console.error("No valid template folders were selected or found.");
+            process.exit(1);
+          }
+
+          const invalidIds = selected.filter((id) => !available.includes(id));
+          if (invalidIds.length > 0) {
+            console.error(`Unknown template ID(s): ${invalidIds.join(", ")}`);
             console.error("Available template IDs:");
             for (const id of available) console.error(`- ${id}`);
             process.exit(1);
           }
 
-          const dataPath = resolve(root, selected, "data.json");
-          let data;
-          try {
-            data = JSON.parse(readFileSync(dataPath, "utf8"));
-          } catch (error) {
-            console.error(`Invalid JSON in ${dataPath}: ${error.message}`);
-            process.exit(1);
-          }
-          if (!data || typeof data !== "object" || Array.isArray(data)) {
-            console.error(`${dataPath} must contain a JSON object.`);
-            process.exit(1);
+          for (const id of selected) {
+            const dataPath = resolve(root, id, "data.json");
+            let data;
+            try {
+              data = JSON.parse(readFileSync(dataPath, "utf8"));
+            } catch (error) {
+              console.error(`Invalid JSON in ${dataPath}: ${error.message}`);
+              process.exit(1);
+            }
+            if (!data || typeof data !== "object" || Array.isArray(data)) {
+              console.error(`${dataPath} must contain a JSON object.`);
+              process.exit(1);
+            }
           }
 
-          appendFileSync(process.env.GITHUB_OUTPUT, `id=${selected}\n`);
-          console.log(`Selected template: ${selected}`);
+          appendFileSync(process.env.GITHUB_OUTPUT, `ids=${selected.join(" ")}\n`);
+          console.log(`Selected templates: ${selected.join(", ")}`);
           NODE
 
       - name: Set up Node.js
@@ -88,37 +92,53 @@ jobs:
       - name: Ensure Remotion browser
         run: npx remotion browser ensure
 
-      - name: Generate template audio when configured
+      - name: Render templates sequentially
         shell: bash
         env:
-          TEMPLATE_ID: ${{ steps.template.outputs.id }}
-        run: |
-          GENERATE_AUDIO=$(node --input-type=module -e '
-            import { readFileSync } from "node:fs";
-            const data = JSON.parse(readFileSync(`src/templates/${process.env.TEMPLATE_ID}/data.json`, "utf8"));
-            if (Array.isArray(data.cues) && data.audio) {
-              console.log("generate");
-            } else {
-              console.log("skip");
-            }
-          ')
-          if [ "$GENERATE_AUDIO" = "generate" ]; then
-            npm run audio:sfx -- "$TEMPLATE_ID"
-          else
-            echo "No generated SFX configured; using the template's existing audio or silence."
-          fi
-
-      - name: Render MP4
-        env:
-          TEMPLATE_ID: ${{ steps.template.outputs.id }}
+          TEMPLATE_IDS: ${{ steps.templates.outputs.ids }}
         run: |
           mkdir -p out
-          npm run render -- "$TEMPLATE_ID" "out/${TEMPLATE_ID}.mp4"
+          failed_templates=()
+          rendered_count=0
+
+          for TEMPLATE_ID in $TEMPLATE_IDS; do
+            output="out/${TEMPLATE_ID}.mp4"
+            rm -f "$output"
+            echo "Rendering template: $TEMPLATE_ID"
+
+            GENERATE_AUDIO=$(TEMPLATE_ID="$TEMPLATE_ID" node --input-type=module -e '
+              import { readFileSync } from "node:fs";
+              const data = JSON.parse(readFileSync(`src/templates/${process.env.TEMPLATE_ID}/data.json`, "utf8"));
+              console.log(Array.isArray(data.cues) && data.audio ? "generate" : "skip");
+            ')
+            if [ "$GENERATE_AUDIO" = "generate" ]; then
+              if ! npm run audio:sfx -- "$TEMPLATE_ID"; then
+                echo "Audio generation failed for $TEMPLATE_ID; continuing."
+                failed_templates+=("$TEMPLATE_ID")
+                continue
+              fi
+            fi
+
+            if npm run render -- "$TEMPLATE_ID" "$output"; then
+              rendered_count=$((rendered_count + 1))
+            else
+              echo "Render failed for $TEMPLATE_ID; excluding its output and continuing."
+              rm -f "$output"
+              failed_templates+=("$TEMPLATE_ID")
+            fi
+          done
+
+          echo "Successfully rendered: $rendered_count"
+          if [ "${#failed_templates[@]}" -gt 0 ]; then
+            echo "Failed templates: ${failed_templates[*]}"
+            exit 1
+          fi
 
       - name: Upload rendered video
         uses: actions/upload-artifact@v4
+        if: always()
         with:
-          name: ${{ steps.template.outputs.id }}-video
-          path: out/${{ steps.template.outputs.id }}.mp4
-          if-no-files-found: error
+          name: rendered-videos
+          path: out/*.mp4
+          if-no-files-found: ignore
           retention-days: 14
