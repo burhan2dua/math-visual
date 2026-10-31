@@ -4,15 +4,9 @@ on:
   workflow_dispatch:
     inputs:
       template:
-        description: Template to render
+        description: Enter the exact folder name from src/templates (for example lifespan-globe)
         required: true
-        type: choice
-        options:
-          - lifespan-globe
-          - minus-times-plus
-          - negative-times-positive
-          - promo
-          - salam
+        type: string
 
 permissions:
   contents: read
@@ -24,6 +18,38 @@ jobs:
     steps:
       - name: Check out project
         uses: actions/checkout@v4
+
+      - name: Validate template folder
+        id: template
+        env:
+          REQUESTED_TEMPLATE: ${{ inputs.template }}
+        run: |
+          node --input-type=module <<'NODE'
+          import { appendFileSync, existsSync, readdirSync } from "node:fs";
+          import { resolve } from "node:path";
+
+          const root = resolve("src/templates");
+          const validId = /^[a-z0-9]+(?:-[a-z0-9]+)*$/;
+          const available = readdirSync(root, { withFileTypes: true })
+            .filter((entry) => entry.isDirectory() && validId.test(entry.name))
+            .filter((entry) =>
+              existsSync(resolve(root, entry.name, "data.json")) &&
+              existsSync(resolve(root, entry.name, "template.tsx"))
+            )
+            .map((entry) => entry.name)
+            .sort();
+          const requested = process.env.REQUESTED_TEMPLATE?.trim();
+
+          if (!available.includes(requested)) {
+            console.error(`Unknown template: ${requested || "(empty)"}`);
+            console.error("Available templates:");
+            for (const id of available) console.error(`- ${id}`);
+            process.exit(1);
+          }
+
+          appendFileSync(process.env.GITHUB_OUTPUT, `id=${requested}\n`);
+          console.log(`Selected template: ${requested}`);
+          NODE
 
       - name: Set up Node.js
         uses: actions/setup-node@v4
@@ -40,7 +66,7 @@ jobs:
       - name: Generate template audio when configured
         shell: bash
         env:
-          TEMPLATE_ID: ${{ inputs.template }}
+          TEMPLATE_ID: ${{ steps.template.outputs.id }}
         run: |
           GENERATE_AUDIO=$(node --input-type=module -e '
             import { readFileSync } from "node:fs";
@@ -59,7 +85,7 @@ jobs:
 
       - name: Render MP4
         env:
-          TEMPLATE_ID: ${{ inputs.template }}
+          TEMPLATE_ID: ${{ steps.template.outputs.id }}
         run: |
           mkdir -p out
           npm run render -- "$TEMPLATE_ID" "out/${TEMPLATE_ID}.mp4"
@@ -67,7 +93,7 @@ jobs:
       - name: Upload rendered video
         uses: actions/upload-artifact@v4
         with:
-          name: ${{ inputs.template }}-video
-          path: out/${{ inputs.template }}.mp4
+          name: ${{ steps.template.outputs.id }}-video
+          path: out/${{ steps.template.outputs.id }}.mp4
           if-no-files-found: error
           retention-days: 14

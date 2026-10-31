@@ -82,9 +82,10 @@ const readTemplate = (entry) => {
   }
 
   if (!templateIdPattern.test(id)) {
-    throw new Error(
-      `Invalid template folder "${id}". Use lowercase letters, numbers, and hyphens.`,
+    console.warn(
+      `Ignoring template folder "${id}": use lowercase letters, numbers, and hyphens for the URL ID.`,
     );
+    return null;
   }
 
   if (!hasData || !hasTemplate) {
