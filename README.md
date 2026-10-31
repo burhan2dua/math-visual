@@ -64,10 +64,12 @@ npm run build
 Render otomatis di GitHub tersedia melalui **Actions → Render Remotion video →
 Run workflow**. Masukkan nama folder template persis, misalnya
 `lifespan-globe`; workflow mencari folder yang berisi `data.json` dan
-`template.tsx`, lalu menampilkan daftar ID yang tersedia jika input tidak cocok.
-GitHub Actions belum mendukung dropdown yang opsinya dibaca dinamis dari folder
-repository. Dengan input teks ini, folder template baru langsung bisa dirender
-tanpa mengubah file workflow. Video MP4 tersedia sebagai artifact setelah render.
+`template.tsx`, serta memvalidasi JSON. Jika hanya satu template valid yang
+tersisa, kolom boleh dikosongkan dan workflow memilih template itu otomatis.
+Jika ada beberapa template, masukkan ID folder yang ingin dirender. GitHub
+Actions belum mendukung dropdown yang opsinya dibaca dinamis dari folder
+repository, jadi folder yang dihapus tidak meninggalkan pilihan workflow usang.
+Video MP4 tersedia sebagai artifact setelah render.
 
 Perintah Studio, render, type-check, dan build membuat ulang registry otomatis.
 Untuk membuat audio polifonik/SFX, isi properti audio di `data.json`, lalu jalankan:
@@ -200,11 +202,25 @@ Template menggunakan `scripts/generate-sfx.mjs`. Masukkan pengaturan audio di `d
   `npm run audio:sfx -- [ID-TEMPLATE]`
 
 KEBUTUHAN VISUAL:
-- ID template: why -x+ = -
-- Tujuan dan urutan adegan: menjelaskan dengan visual animasi memanfaatkan berbagai bentuk ruang sehingga penonton paham kenapa -x+ = -, alih-laih menggunakan  text, gunakan angka saja, sisipkan jduudl diatas, agar penonton paham tujuan video yaitu agar paham mengapa -x+ = -, gunakan efek kamera bergetar, zoom in zoom out yang relevan dengan animasi video, 
+- ID template: Calculus Magic
+- Tujuan dan urutan adegan: menjelaskan dengan visual animasi memanfaatkan berbagai bentuk ruang sehingga penonton paham , alih-laih menggunakan  text, gunakan angka saja, sisipkan judul diatas, agar penonton paham tujuan video yaitu agar paham, gunakan efek kamera bergetar, zoom in zoom out yang relevan dengan animasi video, 
+bentuk shapenya dengan border sedikit glow in the dark saja, tidak perlu efek 3d, dan terapkan golden ratio terbaik, misalnya besar judul, posisi kontent, , dan perhatikan juga efek zoom in dan zoom out jangan terlalu siginifikan, yang membuat kontent keluar dari layar, lalu, ketika hasil dari setiap edegan, berikan beberapa detik agar penonton dapat mencerna, terapkan lokasi judul 
+
+
+
+Vertical 9:16 layout composition, minimalist educational motion graphic style, starting immediately on the very first frame with zero delay or empty space. Top area (Upper Third): short title "Calculus Area" is already visible. Center area: action begins instantly from the first second with a curved mathematical function graph already present, filled with a series of wide vertical rectangular bars that show jagged edges. The bars then dynamically and rapidly increase in number, becoming extremely thin (approaching zero), until the jagged top edges completely smooth out and perfectly fill the entire area under the curved graph. Clean white background throughout, safe zones for UI respected.
 - Data asli: data.json
 - Durasi dan ukuran video: vertikal
 - Bahasa, warna, gaya, animasi: bahasa inggris, glow in the dark, animasi memanjakan mata
 - Audio/SFX yang diinginkan: sfx asmr, memanjakan telinga, full efek suara, seluruh gerakkan terdapat suara, polyphonic, 
 
 Tampilkan kode lengkap kedua file dan sebutkan nama/lokasinya. Pastikan setiap field JSON yang digunakan memang dibaca oleh template, dan tidak ada field yang diperlukan tetapi hilang dari JSON. Jangan mengklaim sudah menjalankan validasi proyek jika tidak benar-benar menjalankannya.
+
+Vertical 9:16 layout composition, minimalist educational motion graphic style, starting immediately on the very first frame with zero delay or empty space:
+- TOP AREA (Upper Third): The short video title "Pascal's Fractal" is already fully visible right from frame one, safely positioned below the status bar and away from the top edge to avoid notch clipping. No critical UI elements on the right.
+- CENTER AREA: Action begins instantly from the first second. A large numeric Pascal's Triangle is already present and immediately starts transforming without delay: a color filter sweeps through, odd numbers turn dark blue, even numbers fade to white, and numbers dissolve into a recursive Sierpinski Triangle fractal pattern growing downwards.
+- BOTTOM AREA: Kept clear of critical visuals, reserved only for occasional subtitles placed slightly above the lower 20% boundary to avoid overlapping with captions and audio buttons.
+- RIGHT SIDE: Completely clear of any important text or details to avoid obstruction by vertical interaction icons (Like, Comment, Share).
+Clean white background throughout.
+
+

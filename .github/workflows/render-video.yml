@@ -4,8 +4,8 @@ on:
   workflow_dispatch:
     inputs:
       template:
-        description: Enter the exact folder name from src/templates (for example lifespan-globe)
-        required: true
+        description: Optional when only one valid template folder remains
+        required: false
         type: string
 
 permissions:
@@ -13,7 +13,7 @@ permissions:
 
 jobs:
   render:
-    name: Render ${{ inputs.template }}
+    name: Render selected template
     runs-on: ubuntu-latest
     steps:
       - name: Check out project
@@ -25,7 +25,12 @@ jobs:
           REQUESTED_TEMPLATE: ${{ inputs.template }}
         run: |
           node --input-type=module <<'NODE'
-          import { appendFileSync, existsSync, readdirSync } from "node:fs";
+          import {
+            appendFileSync,
+            existsSync,
+            readFileSync,
+            readdirSync,
+          } from "node:fs";
           import { resolve } from "node:path";
 
           const root = resolve("src/templates");
@@ -39,16 +44,36 @@ jobs:
             .map((entry) => entry.name)
             .sort();
           const requested = process.env.REQUESTED_TEMPLATE?.trim();
+          const selected =
+            requested ||
+            (available.length === 1 ? available[0] : "");
 
-          if (!available.includes(requested)) {
-            console.error(`Unknown template: ${requested || "(empty)"}`);
-            console.error("Available templates:");
+          if (!available.includes(selected)) {
+            console.error(
+              requested
+                ? `Unknown template: ${requested}`
+                : "Enter a template ID because zero or multiple valid templates remain.",
+            );
+            console.error("Available template IDs:");
             for (const id of available) console.error(`- ${id}`);
             process.exit(1);
           }
 
-          appendFileSync(process.env.GITHUB_OUTPUT, `id=${requested}\n`);
-          console.log(`Selected template: ${requested}`);
+          const dataPath = resolve(root, selected, "data.json");
+          let data;
+          try {
+            data = JSON.parse(readFileSync(dataPath, "utf8"));
+          } catch (error) {
+            console.error(`Invalid JSON in ${dataPath}: ${error.message}`);
+            process.exit(1);
+          }
+          if (!data || typeof data !== "object" || Array.isArray(data)) {
+            console.error(`${dataPath} must contain a JSON object.`);
+            process.exit(1);
+          }
+
+          appendFileSync(process.env.GITHUB_OUTPUT, `id=${selected}\n`);
+          console.log(`Selected template: ${selected}`);
           NODE
 
       - name: Set up Node.js
