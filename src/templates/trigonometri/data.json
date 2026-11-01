@@ -1,0 +1,149 @@
+{
+  "title": "Measure Height Without Climbing",
+  "subtitle": "Distance + angle = height",
+  "background": "#04060f",
+  "accent": "#ffd84a",
+  "durationInSeconds": 20,
+  "width": 1080,
+  "height": 1920,
+  "fps": 30,
+  "bpm": 120,
+  "audio": "audio/trigonometri.wav",
+  "sound": {
+    "sampleRate": 44100,
+    "masterGain": 0.84,
+    "clipDrive": 1.1,
+    "fadeOutSeconds": 1.5,
+    "tick": { "enabled": true, "gain": 0.02, "subdivisionBeats": 0.5, "pan": 0.4 },
+    "pad": {
+      "gain": 0.045,
+      "subGain": 0.11,
+      "attackSeconds": 0.6,
+      "releaseSeconds": 1.2,
+      "tremoloDepth": 0.08,
+      "tremoloHz": 0.3
+    },
+    "reverb": { "mix": 0.36, "feedback": 0.82, "damping": 0.4, "delaysMs": [53.1, 67.7, 79.3, 97.1] }
+  },
+  "colors": {
+    "dist": "#2fe6ff",
+    "angle": "#ffd84a",
+    "height": "#ff5fa2",
+    "building": "#9fc4ff",
+    "text": "#f2f7ff"
+  },
+  "distance": 40,
+  "angleDeg": 35,
+  "unit": "m",
+  "draftOpacity": 0.3,
+  "layout": {
+    "groundY": 1100,
+    "observerX": 140,
+    "wallX": 790,
+    "buildingWidth": 130
+  },
+  "labels": {
+    "distance": "d",
+    "angle": "θ",
+    "height": "h",
+    "unknown": "?",
+    "formula": "tan"
+  },
+  "captions": [
+    { "text": "Step 1 · Measure the distance", "from": "title_in", "to": "sweep" },
+    { "text": "Step 2 · Look up and read the angle", "from": "sweep", "to": "tri" },
+    { "text": "Step 3 · They form a right triangle", "from": "tri", "to": "formula" },
+    { "text": "Step 4 · Tangent turns them into height", "from": "formula", "to": "answer" },
+    { "text": "No climbing needed", "from": "answer" }
+  ],
+  "camera": [
+    { "cue": "title_in", "power": 0.4 },
+    { "cue": "scan", "power": 0.3 },
+    { "cue": "base_line", "power": 0.3 },
+    { "cue": "sweep_end", "power": 0.5 },
+    { "cue": "tri", "power": 0.6 },
+    { "cue": "formula", "power": 0.4 },
+    { "cue": "calc", "power": 0.3 },
+    { "cue": "answer", "power": 1 },
+    { "cue": "fade", "power": 0.3 }
+  ],
+  "sweeps": [
+    { "cue": "title_line", "target": "rule", "dur": 1.6, "color": "angle" },
+    { "cue": "scan", "target": "tri", "dur": 2, "color": "text" },
+    { "cue": "base_w", "target": "ground", "dur": 1.6, "color": "text" },
+    { "cue": "base_line", "target": "dist", "dur": 1.6, "color": "dist" },
+    { "cue": "tri", "target": "tri", "dur": 1.8, "color": "angle" },
+    { "cue": "formula", "target": "formulaLine", "dur": 1.4, "color": "angle" },
+    { "cue": "calc", "target": "calcLine", "dur": 1.2, "color": "text" },
+    { "cue": "answer", "target": "building", "dur": 2.2, "color": "height" },
+    { "cue": "answer", "target": "answerLine", "dur": 1.6, "delay": 0.3, "color": "height" },
+    { "cue": "fade", "target": "wall", "dur": 1.4, "color": "text" }
+  ],
+  "cues": [
+    { "id": "title_in", "beat": 0, "voice": "chime", "notes": [60, 64, 67], "gain": 0.26, "pan": 0 },
+    { "id": "title_line", "beat": 0.2, "voice": "whoosh", "gain": 0.08, "pan": 0.2 },
+    { "id": "scan", "beat": 0.4, "voice": "whoosh", "gain": 0.1, "pan": -0.2 },
+    { "id": "sc_0", "beat": 0.6, "voice": "pluck", "notes": [60], "gain": 0.13, "pan": -0.3 },
+    { "id": "sc_1", "beat": 0.9, "voice": "pluck", "notes": [64], "gain": 0.13, "pan": 0.3 },
+    { "id": "sc_2", "beat": 1.2, "voice": "pluck", "notes": [67], "gain": 0.13, "pan": -0.3 },
+    { "id": "sc_3", "beat": 1.5, "voice": "pluck", "notes": [72], "gain": 0.13, "pan": 0.3 },
+    { "id": "sub_in", "beat": 1.6, "voice": "bell", "notes": [79], "gain": 0.18, "pan": 0.2 },
+
+    { "id": "base_w", "beat": 2.8, "voice": "whoosh", "gain": 0.1, "pan": -0.2 },
+    { "id": "base_line", "beat": 3, "voice": "pluck", "notes": [64], "gain": 0.26, "pan": -0.1 },
+    { "id": "d_lbl", "beat": 4, "voice": "pop", "notes": [67], "gain": 0.22, "pan": 0.1 },
+    { "id": "base_sp", "beat": 4.2, "voice": "sparkle", "notes": [76, 79], "gain": 0.12, "pan": 0.2 },
+
+    { "id": "sweep_w", "beat": 5.6, "voice": "whoosh", "gain": 0.1, "pan": 0.1 },
+    { "id": "sweep", "beat": 6, "voice": "bell", "notes": [72], "gain": 0.22, "pan": 0 },
+    { "id": "sw_0", "beat": 6.5, "voice": "pop", "notes": [60], "gain": 0.18, "pan": -0.3 },
+    { "id": "sw_1", "beat": 7.2, "voice": "pop", "notes": [62], "gain": 0.18, "pan": 0.3 },
+    { "id": "sw_2", "beat": 7.9, "voice": "pop", "notes": [64], "gain": 0.18, "pan": -0.3 },
+    { "id": "sw_3", "beat": 8.6, "voice": "pop", "notes": [67], "gain": 0.18, "pan": 0.3 },
+    { "id": "sw_4", "beat": 9.3, "voice": "pop", "notes": [69], "gain": 0.18, "pan": -0.3 },
+    { "id": "sw_5", "beat": 10, "voice": "pop", "notes": [72], "gain": 0.18, "pan": 0.3 },
+    { "id": "sw_6", "beat": 10.7, "voice": "pop", "notes": [76], "gain": 0.18, "pan": -0.3 },
+    { "id": "sweep_end", "beat": 11.5, "voice": "chime", "notes": [67, 72, 76], "gain": 0.26, "pan": 0 },
+    { "id": "sweep_end_t", "beat": 11.5, "voice": "thud", "notes": [43], "gain": 0.22, "pan": 0 },
+
+    { "id": "tri_w", "beat": 12.8, "voice": "whoosh", "gain": 0.1, "pan": 0 },
+    { "id": "tri", "beat": 13, "voice": "chime", "notes": [60, 64, 67], "gain": 0.26, "pan": 0 },
+    { "id": "tri_t", "beat": 13, "voice": "thud", "notes": [36], "gain": 0.22, "pan": 0 },
+    { "id": "ra", "beat": 14, "voice": "pop", "notes": [76], "gain": 0.2, "pan": 0.2 },
+
+    { "id": "formula", "beat": 15.5, "voice": "bell", "notes": [79], "gain": 0.22, "pan": 0.2 },
+    { "id": "formula_sp", "beat": 15.8, "voice": "sparkle", "notes": [84, 88], "gain": 0.14, "pan": -0.2 },
+    { "id": "calc_w", "beat": 17.8, "voice": "whoosh", "gain": 0.08, "pan": -0.2 },
+    { "id": "calc", "beat": 18, "voice": "pluck", "notes": [67], "gain": 0.26, "pan": -0.1 },
+    { "id": "calc_p", "beat": 18.5, "voice": "pop", "notes": [72], "gain": 0.16, "pan": 0.2 },
+    { "id": "tan", "beat": 20, "voice": "pluck", "notes": [72], "gain": 0.26, "pan": 0.1 },
+    { "id": "tan_p", "beat": 20.4, "voice": "pop", "notes": [76], "gain": 0.16, "pan": -0.2 },
+
+    { "id": "answer_w", "beat": 21.8, "voice": "whoosh", "gain": 0.14, "pan": 0 },
+    { "id": "answer", "beat": 22.5, "voice": "chime", "notes": [60, 64, 67, 72, 76], "gain": 0.32, "pan": 0 },
+    { "id": "answer_t", "beat": 22.5, "voice": "thud", "notes": [36], "gain": 0.26, "pan": 0 },
+    { "id": "fill", "beat": 22.6, "voice": "sparkle", "notes": [72, 76], "gain": 0.12, "pan": 0.2 },
+    { "id": "fl_0", "beat": 22.7, "voice": "pluck", "notes": [60], "gain": 0.13, "pan": -0.3 },
+    { "id": "fl_1", "beat": 23.1, "voice": "pluck", "notes": [62], "gain": 0.13, "pan": 0.3 },
+    { "id": "fl_2", "beat": 23.5, "voice": "pluck", "notes": [64], "gain": 0.13, "pan": -0.3 },
+    { "id": "fl_3", "beat": 23.9, "voice": "pluck", "notes": [67], "gain": 0.13, "pan": 0.3 },
+    { "id": "fl_4", "beat": 24.3, "voice": "pluck", "notes": [69], "gain": 0.13, "pan": -0.3 },
+    { "id": "fl_5", "beat": 24.7, "voice": "pluck", "notes": [72], "gain": 0.13, "pan": 0.3 },
+    { "id": "answer_sp", "beat": 25, "voice": "sparkle", "notes": [88, 91], "gain": 0.18, "pan": 0.2 },
+
+    { "id": "fade_w", "beat": 27, "voice": "whoosh", "gain": 0.1, "pan": 0 },
+    { "id": "fade", "beat": 27.2, "voice": "bell", "notes": [84], "gain": 0.2, "pan": 0.1 },
+    { "id": "fade_sp", "beat": 27.6, "voice": "sparkle", "notes": [88, 91], "gain": 0.14, "pan": -0.2 },
+    { "id": "final", "beat": 29, "voice": "bell", "notes": [79], "gain": 0.16, "pan": 0.2 },
+    { "id": "tail_0", "beat": 31, "voice": "bell", "notes": [84], "gain": 0.12, "pan": -0.2 },
+    { "id": "tail_1", "beat": 32.5, "voice": "bell", "notes": [79], "gain": 0.12, "pan": 0.2 },
+    { "id": "tail_2", "beat": 34, "voice": "bell", "notes": [72], "gain": 0.12, "pan": 0 }
+  ],
+  "pads": [
+    { "beat": 0, "beats": 8, "root": 36, "notes": [48, 52, 55] },
+    { "beat": 8, "beats": 8, "root": 43, "notes": [55, 59, 62] },
+    { "beat": 16, "beats": 8, "root": 45, "notes": [57, 60, 64] },
+    { "beat": 24, "beats": 8, "root": 41, "notes": [53, 57, 60] },
+    { "beat": 32, "beats": 8, "root": 36, "notes": [48, 52, 55] }
+  ]
+}

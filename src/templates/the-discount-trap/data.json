@@ -1,0 +1,151 @@
+{
+  "title": "The Discount Trap",
+  "subtitle": "50% + 20% is not 70% off",
+  "background": "#04060f",
+  "accent": "#ffd84a",
+  "durationInSeconds": 18,
+  "width": 1080,
+  "height": 1920,
+  "fps": 30,
+  "bpm": 120,
+  "audio": "audio/the-discount-trap.wav",
+  "sound": {
+    "sampleRate": 44100,
+    "masterGain": 0.84,
+    "clipDrive": 1.1,
+    "fadeOutSeconds": 1.5,
+    "tick": { "enabled": true, "gain": 0.02, "subdivisionBeats": 0.5, "pan": 0.4 },
+    "pad": {
+      "gain": 0.045,
+      "subGain": 0.11,
+      "attackSeconds": 0.6,
+      "releaseSeconds": 1.2,
+      "tremoloDepth": 0.08,
+      "tremoloHz": 0.3
+    },
+    "reverb": { "mix": 0.36, "feedback": 0.82, "damping": 0.4, "delaysMs": [53.1, 67.7, 79.3, 97.1] }
+  },
+  "colors": {
+    "price": "#2fe6ff",
+    "cut": "#ff5fa2",
+    "text": "#f2f7ff"
+  },
+  "price": 100000,
+  "discounts": [50, 20],
+  "currency": "Rp",
+  "draftOpacity": 0.3,
+  "layout": {
+    "baseY": 1060,
+    "cols": [165, 505, 845],
+    "blockWidth": 210,
+    "blockHeight": 520
+  },
+  "labels": {
+    "sale": "SALE",
+    "finalPrefix": "Only ",
+    "finalSuffix": "% off!"
+  },
+  "captions": [
+    { "text": "Is 50% + 20% really 70% off?", "from": "title_in", "to": "cut1" },
+    { "text": "Take 50% off first", "from": "cut1", "to": "cut2" },
+    { "text": "Then 20% off what is left", "from": "cut2", "to": "gap" },
+    { "text": "That is only 10% of the original price", "from": "gap", "to": "final" },
+    { "text": "Discounts stack on what is left", "from": "final" }
+  ],
+  "camera": [
+    { "cue": "title_in", "power": 0.4 },
+    { "cue": "scan", "power": 0.3 },
+    { "cue": "naive", "power": 0.4 },
+    { "cue": "cut1_hit", "power": 0.6 },
+    { "cue": "arrive1", "power": 0.3 },
+    { "cue": "cut2_hit", "power": 0.6 },
+    { "cue": "arrive2", "power": 0.3 },
+    { "cue": "gap", "power": 0.5 },
+    { "cue": "final", "power": 1 }
+  ],
+  "sweeps": [
+    { "cue": "title_line", "target": "rule", "dur": 1.6, "color": "gold" },
+    { "cue": "scan", "target": "blocks", "dur": 2.4, "color": "text" },
+    { "cue": "naive", "target": "ghost", "dur": 1.4, "color": "cut" },
+    { "cue": "move1", "target": "arrow1", "dur": 1.5, "color": "text" },
+    { "cue": "move2", "target": "arrow2", "dur": 1.5, "color": "text" },
+    { "cue": "gap", "target": "band", "dur": 1.4, "color": "gold" },
+    { "cue": "strike", "target": "trap", "dur": 1.2, "color": "cut" },
+    { "cue": "final", "target": "final3", "dur": 1.8, "color": "gold" },
+    { "cue": "final", "target": "finalLine", "dur": 1.6, "delay": 0.3, "color": "gold" }
+  ],
+  "cues": [
+    { "id": "title_in", "beat": 0, "voice": "chime", "notes": [60, 64, 67], "gain": 0.26, "pan": 0 },
+    { "id": "title_line", "beat": 0.2, "voice": "whoosh", "gain": 0.08, "pan": 0.2 },
+    { "id": "scan", "beat": 0.4, "voice": "whoosh", "gain": 0.1, "pan": -0.2 },
+    { "id": "sc_0", "beat": 0.6, "voice": "pluck", "notes": [60], "gain": 0.13, "pan": -0.3 },
+    { "id": "sc_1", "beat": 0.9, "voice": "pluck", "notes": [64], "gain": 0.13, "pan": 0.3 },
+    { "id": "sc_2", "beat": 1.2, "voice": "pluck", "notes": [67], "gain": 0.13, "pan": -0.3 },
+    { "id": "sc_3", "beat": 1.5, "voice": "pluck", "notes": [72], "gain": 0.13, "pan": 0.3 },
+    { "id": "sub_in", "beat": 1.6, "voice": "bell", "notes": [79], "gain": 0.18, "pan": 0.2 },
+
+    { "id": "naive_w", "beat": 2.8, "voice": "whoosh", "gain": 0.1, "pan": 0.2 },
+    { "id": "naive", "beat": 3, "voice": "bell", "notes": [76], "gain": 0.22, "pan": 0.2 },
+    { "id": "naive_sp", "beat": 3.2, "voice": "sparkle", "notes": [84, 88], "gain": 0.14, "pan": 0.3 },
+    { "id": "naive_p", "beat": 3.8, "voice": "pop", "notes": [72], "gain": 0.16, "pan": 0.2 },
+
+    { "id": "cut1_w", "beat": 6.6, "voice": "whoosh", "gain": 0.1, "pan": -0.2 },
+    { "id": "cut1", "beat": 7, "voice": "pluck", "notes": [67], "gain": 0.26, "pan": -0.3 },
+    { "id": "cut1_hit", "beat": 7.6, "voice": "chime", "notes": [64, 69, 72], "gain": 0.26, "pan": -0.2 },
+    { "id": "cut1_t", "beat": 7.6, "voice": "thud", "notes": [36], "gain": 0.22, "pan": 0 },
+    { "id": "s1_0", "beat": 7.9, "voice": "pop", "notes": [76], "gain": 0.14, "pan": -0.3 },
+    { "id": "s1_1", "beat": 8.1, "voice": "pop", "notes": [79], "gain": 0.14, "pan": 0.1 },
+    { "id": "s1_2", "beat": 8.3, "voice": "pop", "notes": [84], "gain": 0.12, "pan": -0.1 },
+    { "id": "calc1", "beat": 8.5, "voice": "bell", "notes": [76], "gain": 0.2, "pan": 0.1 },
+
+    { "id": "move1_w", "beat": 9.8, "voice": "whoosh", "gain": 0.1, "pan": 0 },
+    { "id": "move1", "beat": 10, "voice": "pluck", "notes": [60], "gain": 0.24, "pan": -0.1 },
+    { "id": "mv1_0", "beat": 10.3, "voice": "pop", "notes": [62], "gain": 0.15, "pan": -0.2 },
+    { "id": "mv1_1", "beat": 10.7, "voice": "pop", "notes": [64], "gain": 0.15, "pan": 0 },
+    { "id": "mv1_2", "beat": 11.1, "voice": "pop", "notes": [67], "gain": 0.15, "pan": 0.2 },
+    { "id": "arrive1", "beat": 11.6, "voice": "chime", "notes": [60, 64, 67], "gain": 0.24, "pan": 0 },
+
+    { "id": "cut2_w", "beat": 12.6, "voice": "whoosh", "gain": 0.1, "pan": 0 },
+    { "id": "cut2", "beat": 13, "voice": "pluck", "notes": [69], "gain": 0.26, "pan": 0 },
+    { "id": "cut2_hit", "beat": 13.6, "voice": "chime", "notes": [67, 72, 76], "gain": 0.26, "pan": 0 },
+    { "id": "cut2_t", "beat": 13.6, "voice": "thud", "notes": [43], "gain": 0.22, "pan": 0 },
+    { "id": "s2_0", "beat": 13.9, "voice": "pop", "notes": [79], "gain": 0.14, "pan": 0.2 },
+    { "id": "s2_1", "beat": 14.1, "voice": "pop", "notes": [84], "gain": 0.14, "pan": -0.2 },
+    { "id": "calc2", "beat": 14.5, "voice": "bell", "notes": [79], "gain": 0.2, "pan": 0.1 },
+
+    { "id": "move2_w", "beat": 15.8, "voice": "whoosh", "gain": 0.1, "pan": 0.1 },
+    { "id": "move2", "beat": 16, "voice": "pluck", "notes": [64], "gain": 0.24, "pan": 0.1 },
+    { "id": "mv2_0", "beat": 16.3, "voice": "pop", "notes": [64], "gain": 0.15, "pan": 0 },
+    { "id": "mv2_1", "beat": 16.7, "voice": "pop", "notes": [67], "gain": 0.15, "pan": 0.2 },
+    { "id": "mv2_2", "beat": 17.1, "voice": "pop", "notes": [69], "gain": 0.15, "pan": 0.3 },
+    { "id": "arrive2", "beat": 17.6, "voice": "chime", "notes": [64, 69, 72], "gain": 0.24, "pan": 0.1 },
+
+    { "id": "calc3", "beat": 18.5, "voice": "bell", "notes": [81], "gain": 0.2, "pan": 0 },
+    { "id": "calc3_p", "beat": 18.9, "voice": "pop", "notes": [84], "gain": 0.15, "pan": 0.2 },
+
+    { "id": "gap_w", "beat": 19.8, "voice": "whoosh", "gain": 0.12, "pan": 0.2 },
+    { "id": "gap", "beat": 20, "voice": "bell", "notes": [84], "gain": 0.24, "pan": 0.3 },
+    { "id": "gap_sp", "beat": 20.2, "voice": "sparkle", "notes": [88, 91], "gain": 0.16, "pan": 0.2 },
+    { "id": "gap_p", "beat": 20.6, "voice": "pop", "notes": [79], "gain": 0.16, "pan": 0.3 },
+
+    { "id": "strike_w", "beat": 21.3, "voice": "whoosh", "gain": 0.1, "pan": -0.1 },
+    { "id": "strike", "beat": 21.5, "voice": "pluck", "notes": [72], "gain": 0.26, "pan": -0.2 },
+    { "id": "strike_p", "beat": 22.2, "voice": "pop", "notes": [67], "gain": 0.16, "pan": 0.1 },
+
+    { "id": "final_w", "beat": 22.8, "voice": "whoosh", "gain": 0.14, "pan": 0 },
+    { "id": "final", "beat": 23, "voice": "chime", "notes": [60, 64, 67, 72, 76], "gain": 0.32, "pan": 0 },
+    { "id": "final_t", "beat": 23, "voice": "thud", "notes": [36], "gain": 0.26, "pan": 0 },
+    { "id": "final_sp", "beat": 23.5, "voice": "sparkle", "notes": [88, 91], "gain": 0.18, "pan": 0.2 },
+
+    { "id": "tail_0", "beat": 26, "voice": "bell", "notes": [84], "gain": 0.12, "pan": -0.2 },
+    { "id": "tail_1", "beat": 27.5, "voice": "bell", "notes": [79], "gain": 0.12, "pan": 0.2 },
+    { "id": "tail_2", "beat": 29, "voice": "bell", "notes": [72], "gain": 0.12, "pan": 0 }
+  ],
+  "pads": [
+    { "beat": 0, "beats": 8, "root": 36, "notes": [48, 52, 55] },
+    { "beat": 8, "beats": 8, "root": 43, "notes": [55, 59, 62] },
+    { "beat": 16, "beats": 8, "root": 45, "notes": [57, 60, 64] },
+    { "beat": 24, "beats": 8, "root": 41, "notes": [53, 57, 60] },
+    { "beat": 32, "beats": 4, "root": 36, "notes": [48, 52, 55] }
+  ]
+}
